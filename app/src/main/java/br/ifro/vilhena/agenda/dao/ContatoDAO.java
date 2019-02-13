@@ -18,6 +18,16 @@ public class ContatoDAO extends SQLiteOpenHelper {
         super(context, "Agenda de contao", null, 1);
     }
 
+    public void deletar(Contato contato) {
+
+        SQLiteDatabase db = getWritableDatabase();
+        String[]parametros = {String.valueOf(contato.getId())};
+        db.delete("contatos", "id = ?", parametros );
+
+
+
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = "create table contatos (id integer primary key, nome text not null, email text, endereco text, telefone text)";
@@ -63,5 +73,23 @@ public class ContatoDAO extends SQLiteOpenHelper {
 
     }
 
+    public void alterar(Contato contato) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues dados = new ContentValues();
+        dados.put("nome", contato.getNome());
+        dados.put("endereco", contato.getEndetreco());
+        dados.put("email", contato.getEmail());
+        dados.put("telefone", contato.getTelefone());
+
+        String[] parametros = {String.valueOf(contato.getId())};
+
+        db.update("contatos", dados, "id=?", parametros);
+
+
+
+
+
+
+    }
 }
 

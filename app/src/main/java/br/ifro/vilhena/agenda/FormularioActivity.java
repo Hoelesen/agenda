@@ -1,5 +1,6 @@
 package br.ifro.vilhena.agenda;
 
+import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ public class FormularioActivity extends AppCompatActivity {
     private TextInputEditText formularioEndreco;
     private TextInputEditText formularioTelefone;
     private Button formularioBtn;
+    private Contato contato;
 
 
     @Override
@@ -31,6 +33,19 @@ public class FormularioActivity extends AppCompatActivity {
         formularioEndreco = findViewById(R.id.formulario_endereco);
         formularioTelefone = findViewById(R.id.formulario_telefone);
 
+        Intent intent = getIntent();
+        if (intent.hasExtra("contato")){
+            contato = (Contato) intent.getSerializableExtra("contato");
+        }else{
+            contato = new Contato();
+        }
+        if (contato != null){
+            formularioNome.setText(contato.getNome());
+            formularioEndreco.setText(contato.getEndetreco());
+            formularioEmail.setText(contato.getEmail());
+            formularioTelefone.setText(contato.getTelefone());
+
+        }
 
 
         formularioBtn.setOnClickListener(new View.OnClickListener() {
@@ -39,7 +54,7 @@ public class FormularioActivity extends AppCompatActivity {
 
 
                 //Criar objeto
-                Contato contato = new Contato();
+
                 contato.setNome(formularioNome.getText().toString());
                 contato.setEmail(formularioEmail.getText().toString());
                 contato.setEndetreco(formularioEndreco.getText().toString());
@@ -48,8 +63,11 @@ public class FormularioActivity extends AppCompatActivity {
 
                 //Inserir no banco de dados
                 ContatoDAO contatoDAO = new ContatoDAO( FormularioActivity.this);
-                contatoDAO.inserir(contato);
-
+               if (contato.getId() == 0 )
+                   contatoDAO.inserir(contato);
+              else
+                  contatoDAO.alterar(contato);
+                contatoDAO.close();
 
 
 

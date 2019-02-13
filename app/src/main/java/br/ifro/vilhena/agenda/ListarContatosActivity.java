@@ -4,10 +4,14 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.Serializable;
 import java.util.List;
 
 import br.ifro.vilhena.agenda.dao.ContatoDAO;
@@ -42,10 +46,22 @@ public class ListarContatosActivity extends AppCompatActivity {
             }
         });
 
+        registerForContextMenu(listarContatosListView);
 
-    }
 
-    private void listar() {
+        listarContatosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int posicao, long id) {
+                Contato contato = (Contato) listarContatosListView.getItemAtPosition(posicao);
+                Intent intent = new Intent(ListarContatosActivity.this, FormularioActivity.class);
+                intent.putExtra("contato", contato);
+                startActivity(intent);
+            }
+        });
+        }
+
+
+    private void carregarLista() {
         ContatoDAO contatoDAO = new ContatoDAO(this);
         List<Contato> contatos = contatoDAO.listar();
 
@@ -58,9 +74,34 @@ public class ListarContatosActivity extends AppCompatActivity {
         this.listarContatosListView.setAdapter(adapter);
     }
 
+
+
     @Override
     protected void onResume() {
         super.onResume();
-        listar();
+        carregarLista();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo) {
+
+        MenuItem menuDeletar = menu.add("Deletar");
+
+        menuDeletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+
+                AdapterView.AdapterContextMenuInfo menu = (AdapterView.AdapterContextMenuInfo) menuInfo;
+                Contato contato = (Contato) listarContatosListView.getItemAtPosition(menu.position);
+
+             ContatoDAO contatoDAO =    new ContatoDAO(ListarContatosActivity.this);
+                contatoDAO.deletar(contato);
+                carregarLista();
+
+
+                return false;
+            }
+        });
     }
 }
