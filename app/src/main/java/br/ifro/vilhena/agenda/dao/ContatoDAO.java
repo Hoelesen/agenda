@@ -15,7 +15,7 @@ public class ContatoDAO extends SQLiteOpenHelper {
 
 
     public ContatoDAO(Context context) {
-        super(context, "Agenda de contao", null, 1);
+        super(context, "Agenda de contao", null, 2);
     }
 
     public void deletar(Contato contato) {
@@ -30,7 +30,7 @@ public class ContatoDAO extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = "create table contatos (id integer primary key, nome text not null, email text, endereco text, telefone text)";
+        String sql = "create table contatos (id integer primary key, nome text not null, email text, endereco text, telefone text, caminhoFoto text)";
         db.execSQL(sql);
 
     }
@@ -38,6 +38,12 @@ public class ContatoDAO extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        switch (oldVersion){
+            case 1:
+
+                String sql = "alter table contatos add column caminhoFoto";
+                db.execSQL(sql);
+        }
 
     }
 
@@ -50,6 +56,8 @@ public class ContatoDAO extends SQLiteOpenHelper {
         dados.put("email", contato.getEmail());
         dados.put("endereco", contato.getEndetreco());
         dados.put("telefone", contato.getTelefone());
+        dados.put("caminhoFoto",contato.getCaminhoFoto());
+
         db.insert("contatos", null,dados);
     }
     public List<Contato> listar(){
@@ -67,6 +75,8 @@ public class ContatoDAO extends SQLiteOpenHelper {
             contato.setEndetreco(c.getString(c.getColumnIndex("endereco")));
             contato.setEmail(c.getString(c.getColumnIndex("email")));
             contato.setNome(c.getString(c.getColumnIndex("nome")));
+            contato.setCaminhoFoto(c.getString(c.getColumnIndex("caminhoFoto")));
+
             lista.add(contato);
         }
         return lista;

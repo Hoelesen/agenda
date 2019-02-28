@@ -13,6 +13,17 @@ public class Contato implements Serializable {
     private String email;
     private String endetreco;
     private String telefone;
+    private String caminhoFoto;
+
+    public String getCaminhoFoto() {
+        return caminhoFoto;
+    }
+
+    public void setCaminhoFoto(String caminhoFoto) {
+        this.caminhoFoto = caminhoFoto;
+    }
+
+
 
     public int getId() {
         return id;
