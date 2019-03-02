@@ -55,44 +55,39 @@ public class FormularioActivity extends AppCompatActivity {
         formularioBtnFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-             caminhoFoto = getExternalFilesDir(null)+"/foto" + System.currentTimeMillis() + ".jpg";
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                caminhoFoto = getExternalFilesDir(null) + "/foto" + System.currentTimeMillis() + ".jpg";
                 File arquivoFoto = new File(caminhoFoto);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(arquivoFoto));
 
                 StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
                 StrictMode.setVmPolicy(builder.build());
 
-                startActivityForResult( intent, CODIGO_CAMERA);
-
+                startActivityForResult(intent, CODIGO_CAMERA);
 
 
             }
         });
 
         Intent intent = getIntent();
-        if (intent.hasExtra("contato")){
+        if (intent.hasExtra("contato")) {
             contato = (Contato) intent.getSerializableExtra("contato");
-        }else{
+        } else {
             contato = new Contato();
         }
         // Carregando os dados para o formulario
-        if (contato != null){
+        if (contato != null) {
             formularioNome.setText(contato.getNome());
             formularioEndreco.setText(contato.getEndetreco());
             formularioEmail.setText(contato.getEmail());
             formularioTelefone.setText(contato.getTelefone());
 
             carregarImagem(contato.getCaminhoFoto());
-
-
         }
-
 
         formularioBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 //Criar objeto
 
@@ -100,23 +95,21 @@ public class FormularioActivity extends AppCompatActivity {
                 contato.setEmail(formularioEmail.getText().toString());
                 contato.setEndetreco(formularioEndreco.getText().toString());
                 contato.setTelefone(formularioTelefone.getText().toString());
-                contato.setCaminhoFoto((String) formularioBtnFoto.getTag());
+
+                contato.setCaminhoFoto(formularioFoto.getTag().toString());
 
 
                 //Inserir no banco de dados
-                ContatoDAO contatoDAO = new ContatoDAO( FormularioActivity.this);
-               if (contato.getId() == 0 )
-                   contatoDAO.inserir(contato);
-              else
-                  contatoDAO.alterar(contato);
+                ContatoDAO contatoDAO = new ContatoDAO(FormularioActivity.this);
+                if (contato.getId() == 0)
+                    contatoDAO.inserir(contato);
+                else
+                    contatoDAO.alterar(contato);
                 contatoDAO.close();
-
-
 
                 Toast.makeText(FormularioActivity.this, "Contato salvo com sucesso", Toast.LENGTH_LONG).show();
 
                 finish();
-
 
             }
         });
@@ -125,30 +118,26 @@ public class FormularioActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-        if (resultCode == Activity.RESULT_OK){
+        if (resultCode == Activity.RESULT_OK) {
 
-            if (requestCode == CODIGO_CAMERA){
+            if (requestCode == CODIGO_CAMERA) {
 
                 carregarImagem((caminhoFoto));
             }
 
         }
-
-
     }
 
     private void carregarImagem(String caminhoFoto) {
+
         Bitmap bitmap = BitmapFactory.decodeFile(caminhoFoto);
 
         if (bitmap != null) {
 
-
-            Bitmap bitmapReduzido = Bitmap.createScaledBitmap(bitmap,400,400,true);
-            formularioFoto.setImageBitmap(bitmap);
+            Bitmap bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 400, 400, true);
+            formularioFoto.setImageBitmap(bitmapReduzido);
             formularioFoto.setScaleType(ImageView.ScaleType.FIT_XY);
             formularioFoto.setTag(caminhoFoto);
-
-
 
 
         }

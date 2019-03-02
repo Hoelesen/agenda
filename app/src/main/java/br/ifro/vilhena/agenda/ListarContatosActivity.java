@@ -14,6 +14,7 @@ import android.widget.ListView;
 import java.io.Serializable;
 import java.util.List;
 
+import br.ifro.vilhena.agenda.adapter.ListaAdapter;
 import br.ifro.vilhena.agenda.dao.ContatoDAO;
 import br.ifro.vilhena.agenda.model.Contato;
 
@@ -67,8 +68,7 @@ public class ListarContatosActivity extends AppCompatActivity {
 
 
         //Criando adapter para enviar os dados ao listview
-        ArrayAdapter<Contato> adapter =
-                new ArrayAdapter<Contato>(this, android.R.layout.simple_list_item_1, contatos);
+        ListaAdapter adapter = new ListaAdapter(contatos,this);
 
         //listview utiliza o adapter
         this.listarContatosListView.setAdapter(adapter);

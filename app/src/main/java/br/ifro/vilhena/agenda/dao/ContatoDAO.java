@@ -41,7 +41,7 @@ public class ContatoDAO extends SQLiteOpenHelper {
         switch (oldVersion){
             case 1:
 
-                String sql = "alter table contatos add column caminhoFoto";
+                String sql = "alter table contatos add column caminhoFoto text";
                 db.execSQL(sql);
         }
 
@@ -90,6 +90,7 @@ public class ContatoDAO extends SQLiteOpenHelper {
         dados.put("endereco", contato.getEndetreco());
         dados.put("email", contato.getEmail());
         dados.put("telefone", contato.getTelefone());
+        dados.put("caminhoFoto", contato.getCaminhoFoto());
 
         String[] parametros = {String.valueOf(contato.getId())};
 

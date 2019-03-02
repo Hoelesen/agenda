@@ -24,7 +24,6 @@ public class Contato implements Serializable {
     }
 
 
-
     public int getId() {
         return id;
     }
@@ -67,6 +66,6 @@ public class Contato implements Serializable {
 
     @Override
     public String toString() {
-        return  id + " - " + nome;
+        return id + " - " + nome;
     }
 }
